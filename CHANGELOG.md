@@ -32,8 +32,14 @@
   - In some scenarios `X-Forwarded-User` will now be empty. Use `X-Forwarded-Email` instead.
   - In some scenarios, this may break setting Basic Auth on upstream or responses.
     Use `--prefer-email-to-user` to restore falling back to the Email in these cases.
+- [#412](https://github.com/oauth2-proxy/oauth2-proxy/pull/412)/[#559](https://github.com/oauth2-proxy/oauth2-proxy/pull/559) Allow multiple cookie domains to be specified
+  - Multiple cookie domains may now be configured. The longest domain that matches will be used.
+  - The config options `cookie_domain` is now `cookie_domains`
+  - The environment variable `OAUTH2_PROXY_COOKIE_DOMAIN` is now `OAUTH2_PROXY_COOKIE_DOMAINS`
 
 ## Changes since v5.1.1
+
+- [#559](https://github.com/oauth2-proxy/oauth2-proxy/pull/559) Rename cookie-domain config to cookie-domains (@JoelSpeed)
 - [#538](https://github.com/oauth2-proxy/oauth2-proxy/pull/538) Refactor sessions/utils.go functionality to other areas (@NickMeves)
 - [#503](https://github.com/oauth2-proxy/oauth2-proxy/pull/503) Implements --real-client-ip-header option to select the header from which to obtain a proxied client's IP (@Izzette)
 - [#529](https://github.com/oauth2-proxy/oauth2-proxy/pull/529) Add local test environments for testing changes and new features (@JoelSpeed)
