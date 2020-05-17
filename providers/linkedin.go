@@ -3,7 +3,6 @@ package providers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 
@@ -45,14 +44,6 @@ func NewLinkedInProvider(p *ProviderData) *LinkedInProvider {
 	return &LinkedInProvider{ProviderData: p}
 }
 
-func getLinkedInHeader(accessToken string) http.Header {
-	header := make(http.Header)
-	header.Set("Accept", "application/json")
-	header.Set("x-li-format", "json")
-	header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-	return header
-}
-
 // GetEmailAddress returns the Account email address
 func (p *LinkedInProvider) GetEmailAddress(ctx context.Context, s *sessions.SessionState) (string, error) {
 	if s.AccessToken == "" {
@@ -62,7 +53,7 @@ func (p *LinkedInProvider) GetEmailAddress(ctx context.Context, s *sessions.Sess
 	if err != nil {
 		return "", err
 	}
-	req.Header = getLinkedInHeader(s.AccessToken)
+	req.Header = getAuthorizationHeader(tokenTypeBearer, s.AccessToken, acceptApplicationJSON, true)
 
 	json, err := requests.Request(req)
 	if err != nil {
@@ -78,5 +69,5 @@ func (p *LinkedInProvider) GetEmailAddress(ctx context.Context, s *sessions.Sess
 
 // ValidateSessionState validates the AccessToken
 func (p *LinkedInProvider) ValidateSessionState(ctx context.Context, s *sessions.SessionState) bool {
-	return validateToken(ctx, p, s.AccessToken, getLinkedInHeader(s.AccessToken))
+	return validateToken(ctx, p, s.AccessToken, getAuthorizationHeader(tokenTypeBearer, s.AccessToken, acceptApplicationJSON, true))
 }

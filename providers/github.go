@@ -59,10 +59,7 @@ func NewGitHubProvider(p *ProviderData) *GitHubProvider {
 }
 
 func getGitHubHeader(accessToken string) http.Header {
-	header := make(http.Header)
-	header.Set("Accept", "application/vnd.github.v3+json")
-	header.Set("Authorization", fmt.Sprintf("token %s", accessToken))
-	return header
+	return getAuthorizationHeader(tokenTypeToken, accessToken, acceptApplicationGitHubJSON, false)
 }
 
 // SetOrgTeam adds GitHub org reading parameters to the OAuth2 scope

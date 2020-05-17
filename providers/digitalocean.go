@@ -3,7 +3,6 @@ package providers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 
@@ -48,13 +47,6 @@ func NewDigitalOceanProvider(p *ProviderData) *DigitalOceanProvider {
 	return &DigitalOceanProvider{ProviderData: p}
 }
 
-func getDigitalOceanHeader(accessToken string) http.Header {
-	header := make(http.Header)
-	header.Set("Content-Type", "application/json")
-	header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-	return header
-}
-
 // GetEmailAddress returns the Account email address
 func (p *DigitalOceanProvider) GetEmailAddress(ctx context.Context, s *sessions.SessionState) (string, error) {
 	if s.AccessToken == "" {
@@ -64,7 +56,7 @@ func (p *DigitalOceanProvider) GetEmailAddress(ctx context.Context, s *sessions.
 	if err != nil {
 		return "", err
 	}
-	req.Header = getDigitalOceanHeader(s.AccessToken)
+	req.Header = getAuthorizationHeader(tokenTypeBearer, s.AccessToken, acceptApplicationJSON, false)
 
 	json, err := requests.Request(req)
 	if err != nil {
@@ -80,5 +72,5 @@ func (p *DigitalOceanProvider) GetEmailAddress(ctx context.Context, s *sessions.
 
 // ValidateSessionState validates the AccessToken
 func (p *DigitalOceanProvider) ValidateSessionState(ctx context.Context, s *sessions.SessionState) bool {
-	return validateToken(ctx, p, s.AccessToken, getDigitalOceanHeader(s.AccessToken))
+	return validateToken(ctx, p, s.AccessToken, getAuthorizationHeader(tokenTypeBearer, s.AccessToken, acceptApplicationJSON, false))
 }

@@ -222,15 +222,7 @@ func (p *OIDCProvider) ValidateSessionState(ctx context.Context, s *sessions.Ses
 	return err == nil
 }
 
-func getOIDCHeader(accessToken string) http.Header {
-	header := make(http.Header)
-	header.Set("Accept", "application/json")
-	header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-	return header
-}
-
 func (p *OIDCProvider) findClaimsFromIDToken(ctx context.Context, idToken *oidc.IDToken, accessToken string, profileURL string) (*OIDCClaims, error) {
-
 	claims := &OIDCClaims{}
 	// Extract default claims.
 	if err := idToken.Claims(&claims); err != nil {
@@ -260,7 +252,7 @@ func (p *OIDCProvider) findClaimsFromIDToken(ctx context.Context, idToken *oidc.
 		if err != nil {
 			return nil, err
 		}
-		req.Header = getOIDCHeader(accessToken)
+		req.Header = getAuthorizationHeader(tokenTypeBearer, accessToken, acceptApplicationJSON, false)
 
 		respJSON, err := requests.Request(req)
 		if err != nil {
