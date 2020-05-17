@@ -44,3 +44,22 @@ func (p *ProviderData) GetClientSecret() (clientSecret string, err error) {
 	}
 	return string(fileClientSecret), nil
 }
+
+func (p *ProviderData) setProviderDefaults(name string, defaultLoginURL, defaultRedeemURL, defaultProfileURL, defaultValidateURL *url.URL, defaultScope string) {
+	p.ProviderName = name
+	if p.LoginURL == nil || p.LoginURL.String() == "" {
+		p.LoginURL = defaultLoginURL
+	}
+	if p.RedeemURL == nil || p.RedeemURL.String() == "" {
+		p.RedeemURL = defaultRedeemURL
+	}
+	if p.ProfileURL == nil || p.ProfileURL.String() == "" {
+		p.ProfileURL = defaultProfileURL
+	}
+	if p.ValidateURL == nil || p.ValidateURL.String() == "" {
+		p.ValidateURL = defaultValidateURL
+	}
+	if p.Scope == "" {
+		p.Scope = defaultScope
+	}
+}
